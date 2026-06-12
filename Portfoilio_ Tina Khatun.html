@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tina Khatun | GIS & Remote Sensing Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050810;
+  --bg2: #0b1120;
+  --surface: #101828;
+  --surface2: #162035;
+  --accent: #39e8b0;
+  --accent2: #1a8fff;
+  --accent3: #f97316;
+  --warn: #facc15;
+  --text: #dde6f5;
+  --muted: #6b809a;
+  --border: rgba(57,232,176,0.12);
+  --border2: rgba(57,232,176,0.06);
+  --glow: 0 0 40px rgba(57,232,176,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none}
+
+/* Custom cursor */
+.cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,width .2s,height .2s;mix-blend-mode:difference}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease;opacity:.6}
+
+/* Grid overlay */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(57,232,176,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(57,232,176,0.025) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;z-index:0}
+
+/* Scanline effect */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5rem;background:rgba(5,8,16,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-brand{display:flex;align-items:center;gap:.8rem}
+.nav-brand-icon{width:32px;height:32px;border:1px solid var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent)}
+.nav-brand-text{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);letter-spacing:.05em}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--accent);transition:width .3s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a:hover::after{width:100%}
+.nav-status{display:flex;align-items:center;gap:.5rem;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);border:1px solid var(--border);padding:.3rem .7rem;border-radius:2px}
+.nav-status::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;padding:9rem 5rem 5rem;position:relative;overflow:hidden;gap:4rem}
+
+.hero-satellite{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-satellite img{position:absolute;right:-5%;top:-10%;width:65%;opacity:.07;mix-blend-mode:screen;filter:saturate(0) contrast(1.2)}
+
+/* Animated radar sweep */
+.radar{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:500px;height:500px;opacity:.06;pointer-events:none}
+.radar svg{width:100%;height:100%;animation:radarRotate 8s linear infinite}
+@keyframes radarRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.hero-content{position:relative;z-index:2}
+.hero-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.eyebrow-line{width:40px;height:1px;background:var(--accent)}
+.eyebrow-text{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);letter-spacing:.2em;text-transform:uppercase}
+
+h1.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,10vw,10rem);line-height:.85;letter-spacing:.03em;color:var(--text);margin-bottom:.3rem}
+h1.hero-name span{color:transparent;-webkit-text-stroke:2px var(--accent)}
+.hero-title{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--accent);margin-bottom:1.8rem;display:flex;align-items:center;gap:.8rem}
+.hero-title::before{content:'>';color:var(--accent)}
+.hero-bio{font-size:1.05rem;color:var(--muted);line-height:1.8;max-width:520px;margin-bottom:2.5rem;font-weight:300}
+.hero-bio strong{color:var(--text);font-weight:500}
+
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem}
+.btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 2rem;font-size:.85rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .3s;font-family:'DM Sans',sans-serif}
+.btn-solid{background:var(--accent);color:var(--bg)}
+.btn-solid:hover{background:#5fffc9;transform:translateY(-2px);box-shadow:0 10px 40px rgba(57,232,176,.3)}
+.btn-ghost{border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:rgba(57,232,176,.05)}
+
+/* Stats */
+.hero-stats{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.h-stat{flex:1;padding:1.2rem 1.5rem;border-right:1px solid var(--border);text-align:center}
+.h-stat:last-child{border-right:none}
+.h-stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent);line-height:1}
+.h-stat-l{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
+
+/* Hero right - GIS display */
+.hero-display{position:relative;z-index:2}
+.gis-terminal{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;font-family:'JetBrains Mono',monospace}
+.terminal-bar{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem;background:var(--surface2);border-bottom:1px solid var(--border)}
+.terminal-dots{display:flex;gap:.4rem}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#ff5f56}.dot-y{background:#ffbd2e}.dot-g{background:var(--accent)}
+.terminal-title{font-size:.65rem;color:var(--muted);letter-spacing:.1em}
+.terminal-body{padding:1.5rem;font-size:.72rem;line-height:2;color:var(--muted);min-height:280px}
+.t-green{color:var(--accent)}.t-blue{color:var(--accent2)}.t-orange{color:var(--accent3)}.t-white{color:var(--text)}.t-yellow{color:var(--warn)}
+.cursor-blink{animation:cursorBlink 1s infinite}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Satellite image strip */
+.sat-strip{margin-top:1rem;border:1px solid var(--border);border-radius:4px;overflow:hidden;position:relative}
+.sat-strip img{width:100%;height:160px;object-fit:cover;display:block;filter:saturate(1.3) contrast(1.1)}
+.sat-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(5,8,16,.7) 0%,transparent 50%,rgba(5,8,16,.3) 100%)}
+.sat-labels{position:absolute;top:.8rem;left:.8rem;display:flex;flex-direction:column;gap:.3rem}
+.sat-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--accent);background:rgba(5,8,16,.7);padding:.2rem .5rem;border-left:2px solid var(--accent)}
+
+/* SECTIONS */
+section{position:relative;z-index:1;padding:7rem 5rem}
+.sec-head{margin-bottom:4rem}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);letter-spacing:.2em;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem}
+.sec-num::after{content:'';height:1px;width:60px;background:linear-gradient(to right,var(--accent),transparent)}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:.04em;line-height:1}
+.sec-sub{color:var(--muted);font-size:1rem;margin-top:.8rem;max-width:600px;line-height:1.7;font-weight:300}
+
+/* ABOUT */
+.about-wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:5rem;align-items:start}
+.about-text p{color:var(--muted);line-height:1.9;font-size:1rem;margin-bottom:1.3rem;font-weight:300}
+.about-text p strong{color:var(--text);font-weight:500}
+.about-tags{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.5rem}
+.about-tag{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);border:1px solid var(--border);padding:.3rem .7rem;border-radius:2px;letter-spacing:.08em}
+.about-panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.panel-header{padding:1rem 1.2rem;background:var(--surface2);border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);letter-spacing:.1em;display:flex;align-items:center;gap:.5rem}
+.panel-header::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 2s infinite}
+.panel-body{padding:1.2rem}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:.8rem 0;border-bottom:1px solid var(--border2);font-size:.85rem}
+.info-row:last-child{border-bottom:none}
+.info-key{color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.05em}
+.info-val{color:var(--text);font-weight:500;text-align:right}
+
+/* SKILLS */
+.skills-bg{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.skills-col-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.skill-bar-item{margin-bottom:1.4rem}
+.skill-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.skill-bar-name{font-size:.88rem;font-weight:500;color:var(--text)}
+.skill-bar-pct{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent)}
+.skill-bar-track{height:3px;background:var(--surface2);border-radius:2px;overflow:hidden}
+.skill-bar-fill{height:100%;background:linear-gradient(to right,var(--accent),var(--accent2));border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform 1.2s cubic-bezier(.16,1,.3,1)}
+.skill-bar-fill.animated{transform:scaleX(1)}
+
+.tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+.tool-chip{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:1rem;text-align:center;transition:all .3s}
+.tool-chip:hover{border-color:var(--accent);transform:translateY(-2px);background:rgba(57,232,176,.04)}
+.tool-icon{font-size:1.5rem;display:block;margin-bottom:.4rem}
+.tool-name{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+
+/* EXPERIENCE */
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.exp-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.8rem;transition:all .3s;position:relative;overflow:hidden}
+.exp-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--accent),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.exp-card:hover{border-color:rgba(57,232,176,.3);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.exp-card:hover::after{transform:scaleX(1)}
+.exp-period{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.8rem}
+.exp-role{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.exp-org{font-size:.9rem;color:var(--accent2);margin-bottom:.3rem;font-weight:500}
+.exp-loc{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.exp-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--accent);border:1px solid var(--border);padding:.15rem .5rem;border-radius:2px;margin-top:.8rem;text-transform:uppercase;letter-spacing:.08em}
+
+/* PROJECTS */
+.projects-bg{background:var(--bg2);border-top:1px solid var(--border)}
+.projects-intro{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem}
+.proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;transition:all .35s;cursor:pointer;text-decoration:none;display:block;color:inherit}
+.proj-card:hover{border-color:rgba(57,232,176,.35);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.proj-img{height:180px;overflow:hidden;position:relative}
+.proj-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s,filter .5s;filter:saturate(1.2) contrast(1.05)}
+.proj-card:hover .proj-img img{transform:scale(1.06);filter:saturate(1.5) contrast(1.1)}
+.proj-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--surface) 100%)}
+.proj-img-tag{position:absolute;top:.8rem;left:.8rem;font-family:'JetBrains Mono',monospace;font-size:.58rem;background:rgba(5,8,16,.85);color:var(--accent);border:1px solid var(--border);padding:.25rem .6rem;border-radius:2px;letter-spacing:.08em;text-transform:uppercase}
+.proj-body{padding:1.5rem}
+.proj-title{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:.7rem;line-height:1.4}
+.proj-desc{font-size:.8rem;color:var(--muted);line-height:1.7;margin-bottom:1.2rem;font-weight:300}
+.proj-footer{display:flex;justify-content:space-between;align-items:center}
+.proj-tags{display:flex;gap:.4rem;flex-wrap:wrap}
+.proj-tag-pill{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);border:1px solid var(--border2);padding:.15rem .5rem;border-radius:2px}
+.proj-arrow{font-size:.85rem;color:var(--accent);transition:transform .3s}
+.proj-card:hover .proj-arrow{transform:translateX(4px)}
+
+/* EDUCATION */
+.edu-timeline{display:flex;flex-direction:column;gap:0;position:relative;padding-left:3rem}
+.edu-timeline::before{content:'';position:absolute;left:.7rem;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--accent),rgba(57,232,176,.1))}
+.edu-item{position:relative;padding:2rem 0 2rem 2rem;border-bottom:1px solid var(--border2)}
+.edu-item:last-child{border-bottom:none}
+.edu-item::before{content:'';position:absolute;left:-2.35rem;top:2.4rem;width:12px;height:12px;background:var(--bg);border:2px solid var(--accent);border-radius:50%;box-shadow:0 0 15px rgba(57,232,176,.4)}
+.edu-year{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);letter-spacing:.1em;margin-bottom:.5rem}
+.edu-deg{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.edu-inst{font-size:.88rem;color:var(--muted);margin-bottom:.5rem;line-height:1.4;font-weight:300}
+.edu-grade{display:inline-flex;align-items:center;gap:.4rem;background:rgba(57,232,176,.08);border:1px solid rgba(57,232,176,.2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:.3rem .8rem;border-radius:2px}
+
+/* CONTACT */
+.contact-bg{background:var(--surface);border-top:1px solid var(--border)}
+.contact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.contact-text p{color:var(--muted);line-height:1.8;font-size:1rem;margin-bottom:2rem;font-weight:300}
+.contact-list{display:flex;flex-direction:column;gap:.8rem}
+.contact-link{display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.5rem;background:var(--surface2);border:1px solid var(--border);border-radius:4px;text-decoration:none;color:var(--text);transition:all .3s}
+.contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateX(6px)}
+.c-icon-wrap{width:36px;height:36px;border:1px solid var(--border);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;transition:border-color .3s}
+.contact-link:hover .c-icon-wrap{border-color:var(--accent)}
+.c-info{display:flex;flex-direction:column;gap:.1rem}
+.c-lbl{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.c-val{font-size:.9rem;font-weight:500}
+
+.contact-right{display:flex;flex-direction:column;gap:1.5rem}
+.langs-box,.cert-box{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1.5rem}
+.box-title{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.lang-list{display:flex;gap:.8rem;flex-wrap:wrap}
+.lang-tag{padding:.5rem 1.2rem;border:1px solid var(--border);border-radius:20px;font-size:.82rem;color:var(--muted);transition:all .3s}
+.lang-tag:hover{border-color:var(--accent);color:var(--accent)}
+.cert-item{font-size:.82rem;color:var(--muted);padding:.6rem 0;border-bottom:1px solid var(--border2);line-height:1.5;font-weight:300}
+.cert-item:last-child{border-bottom:none}
+
+/* FOOTER */
+footer{padding:2rem 5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+footer p{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted)}
+footer span{color:var(--accent)}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.show{opacity:1;transform:none}
+
+@media(max-width:1024px){
+  nav{padding:1rem 2rem}.nav-links{display:none}
+  .hero{grid-template-columns:1fr;padding:8rem 2rem 4rem}.hero-display{display:none}
+  section{padding:5rem 2rem}
+  .about-wrap,.contact-wrap{grid-template-columns:1fr;gap:2rem}
+  .proj-grid{grid-template-columns:1fr}
+  .exp-grid{grid-template-columns:1fr}
+  .skills-wrap{grid-template-columns:1fr;gap:2rem}
+  footer{padding:1.5rem 2rem;flex-direction:column;gap:.5rem;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-icon">TK</div>
+    <div class="nav-brand-text">GIS // RS // ML</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-status">OPEN TO WORK</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-satellite">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/240px-PNG_transparency_demonstration_1.png" alt="" onerror="this.style.display='none'">
+  </div>
+
+  <!-- Radar -->
+  <div class="radar">
+    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="190" fill="none" stroke="#39e8b0" stroke-width=".5"/>
+      <circle cx="200" cy="200" r="140" fill="none" stroke="#39e8b0" stroke-width=".4"/>
+      <circle cx="200" cy="200" r="90" fill="none" stroke="#39e8b0" stroke-width=".4"/>
+      <circle cx="200" cy="200" r="40" fill="none" stroke="#39e8b0" stroke-width=".4"/>
+      <line x1="200" y1="10" x2="200" y2="390" stroke="#39e8b0" stroke-width=".3"/>
+      <line x1="10" y1="200" x2="390" y2="200" stroke="#39e8b0" stroke-width=".3"/>
+      <path d="M200,200 L200,10 A190,190 0 0,1 380,200 Z" fill="rgba(57,232,176,0.15)"/>
+    </svg>
+  </div>
+
+  <div class="hero-content reveal">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-text">Geoinformatics & Remote Sensing</div>
+    </div>
+    <h1 class="hero-name">TINA<br><span>KHATUN</span></h1>
+    <div class="hero-title">GIS Analyst · Spatial Data Scientist · Disaster Modeler</div>
+    <p class="hero-bio">MSc student at <strong>Savitribai Phule Pune University</strong> with a 9.0 CGPA — building Python-powered geospatial models, satellite imagery pipelines, and AI-driven disaster early warning systems that turn raw spatial data into real-world decisions.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-solid">Explore Projects ↗</a>
+      <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div class="h-stat"><div class="h-stat-n">9.0</div><div class="h-stat-l">MSc CGPA</div></div>
+      <div class="h-stat"><div class="h-stat-n">4+</div><div class="h-stat-l">Roles</div></div>
+      <div class="h-stat"><div class="h-stat-n">5+</div><div class="h-stat-l">Projects</div></div>
+      <div class="h-stat"><div class="h-stat-n">12+</div><div class="h-stat-l">GIS Tools</div></div>
+    </div>
+  </div>
+
+  <div class="hero-display reveal">
+    <div class="gis-terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <div class="terminal-title">spatial_analyst.py — RUNNING</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted)">18.52°N 73.85°E</div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-blue">import</span> <span class="t-white">geopandas</span> <span class="t-blue">as</span> <span class="t-white">gpd</span></div>
+        <div><span class="t-blue">import</span> <span class="t-white">rasterio, ee, numpy</span></div>
+        <div><span class="t-blue">from</span> <span class="t-white">sklearn.ensemble</span> <span class="t-blue">import</span> <span class="t-white">RandomForestClassifier</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-green"># Initialize GEE</span></div>
+        <div><span class="t-white">ee</span>.<span class="t-orange">Initialize</span>()</div>
+        <div>&nbsp;</div>
+        <div><span class="t-green"># Load flood susceptibility layers</span></div>
+        <div><span class="t-white">dem</span> = <span class="t-white">ee</span>.<span class="t-orange">Image</span>(<span class="t-yellow">'USGS/SRTMGL1_003'</span>)</div>
+        <div><span class="t-white">ndvi</span> = <span class="t-white">sentinel</span>.<span class="t-orange">normalizedDifference</span>([<span class="t-yellow">'B8','B4'</span>])</div>
+        <div>&nbsp;</div>
+        <div><span class="t-green"># Train ML model</span></div>
+        <div><span class="t-white">model</span>.<span class="t-orange">fit</span>(<span class="t-white">X_train, y_train</span>)</div>
+        <div><span class="t-green"># Accuracy: </span><span class="t-yellow">94.3%</span> <span class="cursor-blink t-green">█</span></div>
+      </div>
+    </div>
+    <div class="sat-strip">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Ganges_delta_from_space.jpg/640px-Ganges_delta_from_space.jpg" alt="Satellite imagery of Ganges Delta" onerror="this.src='https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=640&q=60'">
+      <div class="sat-overlay"></div>
+      <div class="sat-labels">
+        <div class="sat-label">SENTINEL-2 // BAND 4-3-2</div>
+        <div class="sat-label">GANGES DELTA · 22.0°N 89.5°E</div>
+        <div class="sat-label">SPATIAL RES: 10m</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-head reveal">
+    <div class="sec-num">01 — PROFILE</div>
+    <h2 class="sec-title">About Me</h2>
+  </div>
+  <div class="about-wrap reveal">
+    <div class="about-text">
+      <p>I'm an aspiring <strong>Geoinformatics and Remote Sensing specialist</strong> currently pursuing my MSc at Savitribai Phule Pune University. My passion lies in harnessing the power of spatial data to understand and respond to environmental challenges.</p>
+      <p>My work bridges the gap between <strong>satellite imagery and actionable intelligence</strong> — from processing multi-spectral Sentinel-2 imagery in Google Earth Engine to building machine learning pipelines for flood susceptibility mapping and landslide early warning systems.</p>
+      <p>Through internships at <strong>IITM, CSRBOX, Terrain Geospatial, and Vasundhara Geo Technologies</strong>, I've gained hands-on experience across the full geospatial pipeline: data acquisition, preprocessing, analysis, modeling, and visualization for decision-support.</p>
+      <div class="about-tags">
+        <span class="about-tag">Flood Risk Mapping</span>
+        <span class="about-tag">Landslide Prediction</span>
+        <span class="about-tag">LULC Analysis</span>
+        <span class="about-tag">Satellite Image Processing</span>
+        <span class="about-tag">Groundwater Mapping</span>
+        <span class="about-tag">Disaster Management</span>
+        <span class="about-tag">Web GIS</span>
+        <span class="about-tag">Photogrammetry</span>
+      </div>
+    </div>
+    <div>
+      <div class="about-panel">
+        <div class="panel-header">ANALYST PROFILE</div>
+        <div class="panel-body">
+          <div class="info-row"><span class="info-key">LOCATION</span><span class="info-val">Pune, Maharashtra</span></div>
+          <div class="info-row"><span class="info-key">CURRENT</span><span class="info-val">Project Intern @ IITM</span></div>
+          <div class="info-row"><span class="info-key">PROGRAMME</span><span class="info-val">MSc Geoinformatics & RS</span></div>
+          <div class="info-row"><span class="info-key">FOCUS</span><span class="info-val">Disaster Management</span></div>
+          <div class="info-row"><span class="info-key">EMAIL</span><span class="info-val" style="font-size:.8rem">tnakhtun@gmail.com</span></div>
+          <div class="info-row"><span class="info-key">LINKEDIN</span><span class="info-val" style="font-size:.75rem">tina-khatun-31a00a233</span></div>
+          <div class="info-row"><span class="info-key">DOB</span><span class="info-val">13 October 2003</span></div>
+          <div class="info-row"><span class="info-key">LANGUAGES</span><span class="info-val">EN · HI · BN</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="skills-bg">
+  <div class="sec-head reveal">
+    <div class="sec-num">02 — TECHNICAL STACK</div>
+    <h2 class="sec-title">Skills & Tools</h2>
+    <p class="sec-sub">From desktop GIS to cloud-based Earth Engine scripting — spanning the full geospatial analysis pipeline.</p>
+  </div>
+  <div class="skills-wrap reveal">
+    <div>
+      <div class="skills-col-title">// PROFICIENCY LEVELS</div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">QGIS / ArcGIS Pro</span><span class="skill-bar-pct">92%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">Google Earth Engine</span><span class="skill-bar-pct">85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">Python (GeoPandas, Rasterio)</span><span class="skill-bar-pct">82%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:82%"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">Remote Sensing / Image Analysis</span><span class="skill-bar-pct">88%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">Machine Learning (Sklearn, RF, SVM)</span><span class="skill-bar-pct">75%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">ERDAS Imagine / Agisoft Metashape</span><span class="skill-bar-pct">78%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:78%"></div></div>
+      </div>
+      <div class="skill-bar-item">
+        <div class="skill-bar-top"><span class="skill-bar-name">AutoCAD / SQL / HTML & JS</span><span class="skill-bar-pct">68%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:68%"></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="skills-col-title">// SOFTWARE TOOLKIT</div>
+      <div class="tools-grid">
+        <div class="tool-chip"><span class="tool-icon">🗺️</span><span class="tool-name">QGIS</span></div>
+        <div class="tool-chip"><span class="tool-icon">🌍</span><span class="tool-name">ArcGIS Pro</span></div>
+        <div class="tool-chip"><span class="tool-icon">🛰️</span><span class="tool-name">ERDAS</span></div>
+        <div class="tool-chip"><span class="tool-icon">📡</span><span class="tool-name">GEE</span></div>
+        <div class="tool-chip"><span class="tool-icon">🐍</span><span class="tool-name">Python</span></div>
+        <div class="tool-chip"><span class="tool-icon">✈️</span><span class="tool-name">Metashape</span></div>
+        <div class="tool-chip"><span class="tool-icon">📐</span><span class="tool-name">AutoCAD</span></div>
+        <div class="tool-chip"><span class="tool-icon">🗄️</span><span class="tool-name">SQL</span></div>
+        <div class="tool-chip"><span class="tool-icon">🤖</span><span class="tool-name">ML / IoT</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="sec-head reveal">
+    <div class="sec-num">03 — WORK HISTORY</div>
+    <h2 class="sec-title">Experience</h2>
+  </div>
+  <div class="exp-grid reveal">
+    <div class="exp-card">
+      <div class="exp-period">08/2025 — PRESENT</div>
+      <div class="exp-role">Project Intern</div>
+      <div class="exp-org">Indian Institute of Tropical Meteorology (IITM)</div>
+      <div class="exp-loc">📍 Pune, Maharashtra</div>
+      <span class="exp-badge">CURRENT</span>
+    </div>
+    <div class="exp-card">
+      <div class="exp-period">08/2025 — 12/2025</div>
+      <div class="exp-role">GIS Analyst</div>
+      <div class="exp-org">CSRBOX</div>
+      <div class="exp-loc">📍 Pune, Maharashtra</div>
+      <span class="exp-badge">GIS ANALYSIS</span>
+    </div>
+    <div class="exp-card">
+      <div class="exp-period">05/2025 — 07/2025</div>
+      <div class="exp-role">GIS Executive</div>
+      <div class="exp-org">Terrain Geospatial LLP</div>
+      <div class="exp-loc">📍 Pune, Maharashtra</div>
+      <span class="exp-badge">GEOSPATIAL</span>
+    </div>
+    <div class="exp-card">
+      <div class="exp-period">12/2024 — 04/2025</div>
+      <div class="exp-role">GIS Intern</div>
+      <div class="exp-org">Vasundhara Geo Technologies Pvt. Ltd.</div>
+      <div class="exp-loc">📍 Pune, Maharashtra</div>
+      <span class="exp-badge">INTERNSHIP</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="projects-bg">
+  <div class="projects-intro reveal">
+    <div class="sec-head" style="margin-bottom:0">
+      <div class="sec-num">04 — RESEARCH & WORK</div>
+      <h2 class="sec-title">Projects</h2>
+      <p class="sec-sub">Click any project to explore methodology, tools, and outcomes in detail.</p>
+    </div>
+  </div>
+  <div class="proj-grid reveal">
+
+    <a href="project-disaster.html" class="proj-card">
+      <div class="proj-img">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Landslide_India.jpg/640px-Landslide_India.jpg"
+             alt="Landslide disaster"
+             onerror="this.src='https://images.unsplash.com/photo-1569428034239-f9565e32e224?w=640&q=60'">
+        <div class="proj-img-overlay"></div>
+        <div class="proj-img-tag">AI · IoT · Disaster Mgmt</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">AI-Driven Disaster Monitoring & Early Warning System</div>
+        <div class="proj-desc">IoT + Python ML system for real-time disaster prediction. Presented at GMRT Science Day 2025. Primarily landslide-focused, adaptable for multiple hazards.</div>
+        <div class="proj-footer">
+          <div class="proj-tags"><span class="proj-tag-pill">IoT</span><span class="proj-tag-pill">Python</span><span class="proj-tag-pill">ML</span></div>
+          <div class="proj-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <a href="project-flood-lakhimpur.html" class="proj-card">
+      <div class="proj-img">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Assam_Flood_2012.jpg/640px-Assam_Flood_2012.jpg"
+             alt="Assam flood"
+             onerror="this.src='https://images.unsplash.com/photo-1547683905-f686c993aae5?w=640&q=60'">
+        <div class="proj-img-overlay"></div>
+        <div class="proj-img-tag">Remote Sensing · ML · Flood</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">Flood Susceptibility Mapping — Lakhimpur, Assam</div>
+        <div class="proj-desc">Multi-source geospatial data + supervised ML for flood risk zone classification in monsoon-affected Lakhimpur district.</div>
+        <div class="proj-footer">
+          <div class="proj-tags"><span class="proj-tag-pill">GEE</span><span class="proj-tag-pill">Random Forest</span><span class="proj-tag-pill">NDVI</span></div>
+          <div class="proj-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <a href="project-sundarbans.html" class="proj-card">
+      <div class="proj-img">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Ganges_delta_from_space.jpg/640px-Ganges_delta_from_space.jpg"
+             alt="Sundarbans from space"
+             onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=640&q=60'">
+        <div class="proj-img-overlay"></div>
+        <div class="proj-img-tag">GIS · Remote Sensing</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">Flood Risk Mapping — Pathar Pratima, Sundarbans</div>
+        <div class="proj-desc">GIS-based flood susceptibility analysis to identify vulnerable zones in the Sundarbans delta, supporting disaster preparedness.</div>
+        <div class="proj-footer">
+          <div class="proj-tags"><span class="proj-tag-pill">ArcGIS</span><span class="proj-tag-pill">QGIS</span><span class="proj-tag-pill">DEM</span></div>
+          <div class="proj-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <a href="project-groundwater.html" class="proj-card">
+      <div class="proj-img">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Groundwater_well.jpg/640px-Groundwater_well.jpg"
+             alt="Groundwater"
+             onerror="this.src='https://images.unsplash.com/photo-1541252260730-0412e8e2108e?w=640&q=60'">
+        <div class="proj-img-overlay"></div>
+        <div class="proj-img-tag">ML · Groundwater · Web GIS</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">Groundwater Potential Zone Mapping</div>
+        <div class="proj-desc">ML-based multi-criteria thematic analysis with well inventory data. Cloud-based raster processing and Web GIS visualization for decision-support.</div>
+        <div class="proj-footer">
+          <div class="proj-tags"><span class="proj-tag-pill">GEE</span><span class="proj-tag-pill">ML</span><span class="proj-tag-pill">Web GIS</span></div>
+          <div class="proj-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <a href="project-lulc.html" class="proj-card">
+      <div class="proj-img">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kolkata_City%2C_India.jpg/640px-Kolkata_City%2C_India.jpg"
+             alt="Kolkata urban"
+             onerror="this.src='https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=640&q=60'">
+        <div class="proj-img-overlay"></div>
+        <div class="proj-img-tag">LULC · Urban Planning</div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-title">Land Use & Land Cover Change — Dumdum, Kolkata</div>
+        <div class="proj-desc">Multi-temporal LULC change analysis of Dumdum Municipality using GIS & RS for sustainable urban planning and monitoring.</div>
+        <div class="proj-footer">
+          <div class="proj-tags"><span class="proj-tag-pill">LULC</span><span class="proj-tag-pill">Change Detection</span><span class="proj-tag-pill">NDVI</span></div>
+          <div class="proj-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="sec-head reveal">
+    <div class="sec-num">05 — ACADEMIC BACKGROUND</div>
+    <h2 class="sec-title">Education</h2>
+  </div>
+  <div class="edu-timeline reveal">
+    <div class="edu-item">
+      <div class="edu-year">2024 — PRESENT</div>
+      <div class="edu-deg">MSc. Geoinformatics & Remote Sensing</div>
+      <div class="edu-inst">Savitribai Phule Pune University, Pune</div>
+      <span class="edu-grade">🎯 CGPA 9.0</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2023 — 2024</div>
+      <div class="edu-deg">PG Diploma in GIS & Remote Sensing</div>
+      <div class="edu-inst">Ramakrishna Sarada Mission Vivekananda Viddyabhavan, West Bengal State University</div>
+      <span class="edu-grade">🏅 Grade A</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2021 — 2024</div>
+      <div class="edu-deg">BSc. Geography</div>
+      <div class="edu-inst">Ramakrishna Sarada Mission Vivekananda Viddyabhavan, West Bengal State University</div>
+      <span class="edu-grade">🎯 CGPA 9.30</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2019 — 2021</div>
+      <div class="edu-deg">12th Standard (Higher Secondary)</div>
+      <div class="edu-inst">WBCHSE — West Bengal Council of Higher Secondary Education</div>
+      <span class="edu-grade">📊 87.8%</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2018 — 2019</div>
+      <div class="edu-deg">10th Standard (Secondary)</div>
+      <div class="edu-inst">WBBSE — West Bengal Board of Secondary Education</div>
+      <span class="edu-grade">📊 82%</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-bg">
+  <div class="sec-head reveal">
+    <div class="sec-num">06 — GET IN TOUCH</div>
+    <h2 class="sec-title">Contact</h2>
+  </div>
+  <div class="contact-wrap reveal">
+    <div class="contact-text">
+      <p>Open to internships, research collaborations, GIS consulting, and remote sensing projects. Whether you're working on disaster management, environmental monitoring, or urban planning — let's connect!</p>
+      <div class="contact-list">
+        <a href="mailto:tnakhtun@gmail.com" class="contact-link">
+          <div class="c-icon-wrap">✉️</div>
+          <div class="c-info"><span class="c-lbl">Email</span><span class="c-val">tnakhtun@gmail.com</span></div>
+        </a>
+        <a href="tel:+918759525577" class="contact-link">
+          <div class="c-icon-wrap">📞</div>
+          <div class="c-info"><span class="c-lbl">Phone</span><span class="c-val">+91 8759525577</span></div>
+        </a>
+        <a href="https://linkedin.com/in/tina-khatun-31a00a233" target="_blank" class="contact-link">
+          <div class="c-icon-wrap">💼</div>
+          <div class="c-info"><span class="c-lbl">LinkedIn</span><span class="c-val">tina-khatun-31a00a233</span></div>
+        </a>
+        <div class="contact-link">
+          <div class="c-icon-wrap">📍</div>
+          <div class="c-info"><span class="c-lbl">Location</span><span class="c-val">Pune, Maharashtra, India</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-right">
+      <div class="langs-box">
+        <div class="box-title">// LANGUAGES</div>
+        <div class="lang-list">
+          <span class="lang-tag">🇬🇧 English</span>
+          <span class="lang-tag">🇮🇳 Hindi</span>
+          <span class="lang-tag">🇮🇳 Bengali</span>
+        </div>
+      </div>
+      <div class="cert-box">
+        <div class="box-title">// CERTIFICATES</div>
+        <div class="cert-item">📜 GIS and Remote Sensing — RKSMVV, 2024</div>
+        <div class="cert-item">📜 Python Programming — IT Application, Memari Youth Computer Training System</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 <span>Tina Khatun</span> — Geoinformatics & Remote Sensing</p>
+  <p>Pune, Maharashtra · <span>18.52°N 73.85°E</span></p>
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  setTimeout(() => { ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px'; }, 80);
+});
+document.querySelectorAll('a,.proj-card,.tool-chip,.skill-chip').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.width = '20px'; cursor.style.height = '20px'; ring.style.width = '50px'; ring.style.height = '50px'; });
+  el.addEventListener('mouseleave', () => { cursor.style.width = '10px'; cursor.style.height = '10px'; ring.style.width = '36px'; ring.style.height = '36px'; });
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('show'); revObs.unobserve(e.target); } });
+}, { threshold: 0.08 });
+reveals.forEach(r => revObs.observe(r));
+
+// Skill bars animate on scroll
+const bars = document.querySelectorAll('.skill-bar-fill');
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('animated'); barObs.unobserve(e.target); } });
+}, { threshold: 0.5 });
+bars.forEach(b => barObs.observe(b));
+
+// Stagger grid children
+document.querySelectorAll('.proj-grid, .exp-grid, .tools-grid').forEach(grid => {
+  const go = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        Array.from(e.target.children).forEach((c,i) => {
+          c.style.opacity = '0'; c.style.transform = 'translateY(25px)';
+          c.style.transition = `opacity .6s ${i*.1}s ease, transform .6s ${i*.1}s ease`;
+          setTimeout(() => { c.style.opacity='1'; c.style.transform='none'; }, 60);
+        });
+        go.unobserve(e.target);
+      }
+    });
+  }, {threshold:.05});
+  go.observe(grid);
+});
+</script>
+</body>
+</html>

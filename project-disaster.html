@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Disaster Monitoring | Tina Khatun</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050810;--bg2:#0b1120;--surface:#101828;--surface2:#162035;--accent:#39e8b0;--accent2:#1a8fff;--accent3:#f97316;--text:#dde6f5;--muted:#6b809a;--border:rgba(57,232,176,0.12);--border2:rgba(57,232,176,0.06)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(57,232,176,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(57,232,176,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5rem;background:rgba(5,8,16,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-back{display:flex;align-items:center;gap:.8rem;text-decoration:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.08em;transition:color .3s}
+.nav-back:hover{color:var(--accent)}
+.nav-title{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:.05em}
+
+.project-hero{min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 5rem 4rem;position:relative;overflow:hidden}
+.project-hero-img{position:absolute;inset:0}
+.project-hero-img img{width:100%;height:100%;object-fit:cover;filter:saturate(1.2) contrast(1.05)}
+.project-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,8,16,.4) 0%,rgba(5,8,16,.85) 60%,var(--bg) 100%)}
+.project-hero-content{position:relative;z-index:2;max-width:800px}
+.proj-eyebrow{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.proj-tag-hero{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);border:1px solid var(--border);padding:.3rem .8rem;border-radius:2px;background:rgba(5,8,16,.6);letter-spacing:.1em;text-transform:uppercase}
+.project-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);line-height:1;letter-spacing:.03em;margin-bottom:1rem}
+.project-subtitle{font-size:1.1rem;color:var(--muted);line-height:1.7;font-weight:300;max-width:680px}
+
+.project-meta-strip{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:2rem;max-width:700px}
+.meta-item{flex:1;padding:1rem 1.5rem;border-right:1px solid var(--border);background:rgba(10,16,28,.8)}
+.meta-item:last-child{border-right:none}
+.meta-key{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
+.meta-val{font-size:.88rem;font-weight:600;color:var(--text)}
+
+.content-area{max-width:900px;margin:0 auto;padding:5rem;position:relative;z-index:1}
+.content-area>*+*{margin-top:3rem}
+
+.section-block h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.04em;color:var(--text);margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
+.section-block h2::before{content:'';width:3px;height:1.5rem;background:var(--accent);border-radius:2px;flex-shrink:0}
+.section-block p{color:var(--muted);line-height:1.9;font-size:1rem;font-weight:300;margin-bottom:1rem}
+.section-block p strong{color:var(--text);font-weight:500}
+
+.highlights-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.5rem}
+.hl-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.5rem;text-align:center}
+.hl-icon{font-size:2rem;margin-bottom:.8rem;display:block}
+.hl-val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--accent);line-height:1;display:block}
+.hl-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.3rem}
+
+.img-block{border-radius:8px;overflow:hidden;border:1px solid var(--border);position:relative}
+.img-block img{width:100%;display:block;object-fit:cover;max-height:420px;filter:saturate(1.15)}
+.img-caption{padding:.8rem 1.2rem;background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);border-top:1px solid var(--border);letter-spacing:.05em}
+
+.tech-stack{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.tech-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);border:1px solid var(--border);padding:.3rem .8rem;border-radius:2px;background:rgba(57,232,176,.04);letter-spacing:.06em}
+
+.workflow-steps{display:flex;flex-direction:column;gap:.8rem;margin-top:1.2rem}
+.w-step{display:flex;align-items:flex-start;gap:1.2rem;padding:1.2rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px}
+.w-step-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--accent);line-height:1;flex-shrink:0;width:2rem;text-align:center}
+.w-step-content h4{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.w-step-content p{font-size:.82rem;color:var(--muted);line-height:1.6;margin:0;font-weight:300}
+
+.back-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:.85rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:2px;transition:all .3s;font-family:'DM Sans',sans-serif}
+.back-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(57,232,176,.05)}
+
+@media(max-width:768px){nav{padding:1rem 1.5rem}.project-hero{padding:8rem 1.5rem 3rem}.content-area{padding:3rem 1.5rem}.highlights-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+  <div class="nav-title">PROJECT 01 / 05</div>
+</nav>
+
+<div class="project-hero">
+  <div class="project-hero-img">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Landslide_India.jpg/1280px-Landslide_India.jpg"
+         alt="Landslide India"
+         onerror="this.src='https://images.unsplash.com/photo-1569428034239-f9565e32e224?w=1200&q=70'">
+  </div>
+  <div class="project-hero-overlay"></div>
+  <div class="project-hero-content">
+    <div class="proj-eyebrow">
+      <span class="proj-tag-hero">AI · IoT · Disaster Management</span>
+      <span class="proj-tag-hero">Feb 2025 · GMRT Science Day</span>
+    </div>
+    <h1 class="project-title">AI-Driven Disaster Monitoring & Early Warning System</h1>
+    <p class="project-subtitle">An IoT-integrated, Python-powered machine learning system for real-time environmental hazard prediction — built for landslides and adaptable to floods, cyclones, and other geo-hazards.</p>
+    <div class="project-meta-strip">
+      <div class="meta-item"><div class="meta-key">Domain</div><div class="meta-val">Disaster Management</div></div>
+      <div class="meta-item"><div class="meta-key">Technique</div><div class="meta-val">ML + IoT + GPS</div></div>
+      <div class="meta-item"><div class="meta-key">Presented</div><div class="meta-val">GMRT, Narayangaon</div></div>
+      <div class="meta-item"><div class="meta-key">Year</div><div class="meta-val">2025</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="content-area">
+
+  <div class="section-block">
+    <h2>Project Overview</h2>
+    <p>This project presents an <strong>AI-powered, IoT-integrated early warning system</strong> designed to detect environmental triggers and predict geo-hazard events — primarily landslides — before they cause casualties. The system combines real-time sensor networks with GPS tracking and Python-based machine learning models to issue timely alerts.</p>
+    <p>Showcased at the <strong>GMRT Science Day Exhibition, Narayangaon, Maharashtra (February 2025)</strong>, this project demonstrated the practical deployment of geospatial AI in disaster risk reduction workflows.</p>
+  </div>
+
+  <div class="highlights-grid">
+    <div class="hl-card"><span class="hl-icon">🌡️</span><span class="hl-val">4+</span><span class="hl-label">Sensor Parameters</span></div>
+    <div class="hl-card"><span class="hl-icon">⚡</span><span class="hl-val">Real-Time</span><span class="hl-label">Data Processing</span></div>
+    <div class="hl-card"><span class="hl-icon">🎯</span><span class="hl-val">Multi-Hazard</span><span class="hl-label">Adaptable System</span></div>
+  </div>
+
+  <div class="img-block">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Landslide_by_Ron_Schott.jpg/1280px-Landslide_by_Ron_Schott.jpg"
+         alt="Landslide terrain"
+         onerror="this.src='https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=900&q=70'">
+    <div class="img-caption">// FIGURE 1 — Terrain susceptible to landslide events; sensor deployment zones identified via slope analysis</div>
+  </div>
+
+  <div class="section-block">
+    <h2>Methodology</h2>
+    <p>The system architecture integrates three core layers: a <strong>physical sensor network</strong> (IoT devices measuring soil moisture, temperature, precipitation, and wind speed), a <strong>geospatial layer</strong> (GPS-enabled location tracking of field sensors), and an <strong>AI/ML prediction layer</strong> built in Python.</p>
+    <p>Sensor data is streamed in real-time to a processing pipeline where engineered features are passed to trained classification models. Alert thresholds are dynamically updated based on seasonal baselines and historical hazard records.</p>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="w-step"><div class="w-step-num">1</div><div class="w-step-content"><h4>IoT Sensor Deployment</h4><p>Field sensors measuring soil moisture, temperature, precipitation intensity, and wind speed installed at high-risk slope locations identified via DEM analysis.</p></div></div>
+    <div class="w-step"><div class="w-step-num">2</div><div class="w-step-content"><h4>Real-Time Data Ingestion</h4><p>GPS-tagged sensor readings streamed continuously to central processing server. Data validated, cleaned, and timestamped for ML pipeline input.</p></div></div>
+    <div class="w-step"><div class="w-step-num">3</div><div class="w-step-content"><h4>Feature Engineering & ML Prediction</h4><p>Python-based ML models (Random Forest, Gradient Boosting) trained on historical hazard records and multi-parameter environmental data to classify hazard probability levels.</p></div></div>
+    <div class="w-step"><div class="w-step-num">4</div><div class="w-step-content"><h4>Alert Generation & Visualization</h4><p>When probability exceeds defined thresholds, the system triggers automated alerts. Hazard zones visualized on GIS dashboards for emergency response coordination.</p></div></div>
+  </div>
+
+  <div class="section-block">
+    <h2>Tools & Technologies</h2>
+    <div class="tech-stack">
+      <span class="tech-tag">Python</span><span class="tech-tag">Scikit-learn</span><span class="tech-tag">IoT Sensors</span>
+      <span class="tech-tag">GPS Tracking</span><span class="tech-tag">NumPy / Pandas</span><span class="tech-tag">QGIS</span>
+      <span class="tech-tag">Matplotlib</span><span class="tech-tag">Random Forest</span><span class="tech-tag">Gradient Boosting</span>
+      <span class="tech-tag">Soil Moisture Sensors</span><span class="tech-tag">Raspberry Pi</span><span class="tech-tag">ArcGIS</span>
+    </div>
+  </div>
+
+  <div class="img-block">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/IoT_sensor_network_diagram.png/640px-IoT_sensor_network_diagram.png"
+         alt="IoT Architecture"
+         onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=70'">
+    <div class="img-caption">// FIGURE 2 — IoT sensor network architecture for environmental hazard monitoring</div>
+  </div>
+
+  <div class="section-block">
+    <h2>Key Outcomes</h2>
+    <p>The system was successfully demonstrated at the <strong>GMRT Science Day Exhibition 2025</strong>. The multi-hazard adaptability of the architecture means the same sensor-ML pipeline can be reconfigured for <strong>flood monitoring, cyclone tracking, and extreme heat events</strong> by adjusting input parameters and retrained model weights.</p>
+    <p>The project establishes a replicable framework for <strong>community-level disaster preparedness</strong> in geologically vulnerable regions of India, particularly the Western Ghats and Himalayan foothills.</p>
+  </div>
+
+  <a href="index.html#projects" class="back-btn">← Back to All Projects</a>
+</div>
+</body>
+</html>

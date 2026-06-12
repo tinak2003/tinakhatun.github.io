@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flood Susceptibility Mapping — Lakhimpur | Tina Khatun</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050810;--bg2:#0b1120;--surface:#101828;--surface2:#162035;--accent:#39e8b0;--accent2:#1a8fff;--accent3:#f97316;--text:#dde6f5;--muted:#6b809a;--border:rgba(57,232,176,0.12);--border2:rgba(57,232,176,0.06)}
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(57,232,176,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(57,232,176,0.025) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 5rem;background:rgba(5,8,16,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-back{display:flex;align-items:center;gap:.8rem;text-decoration:none;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.08em;transition:color .3s}
+.nav-back:hover{color:var(--accent)}
+.nav-title{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:.05em}
+.project-hero{min-height:70vh;display:flex;flex-direction:column;justify-content:flex-end;padding:9rem 5rem 4rem;position:relative;overflow:hidden}
+.project-hero-img{position:absolute;inset:0}
+.project-hero-img img{width:100%;height:100%;object-fit:cover;filter:saturate(1.3) contrast(1.05)}
+.project-hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(5,8,16,.4) 0%,rgba(5,8,16,.85) 60%,var(--bg) 100%)}
+.project-hero-content{position:relative;z-index:2;max-width:800px}
+.proj-tag-hero{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);border:1px solid var(--border);padding:.3rem .8rem;border-radius:2px;background:rgba(5,8,16,.6);letter-spacing:.1em;text-transform:uppercase;display:inline-block;margin-right:.5rem;margin-bottom:1.2rem}
+.project-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);line-height:1;letter-spacing:.03em;margin-bottom:1rem}
+.project-subtitle{font-size:1.1rem;color:var(--muted);line-height:1.7;font-weight:300;max-width:680px}
+.project-meta-strip{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-top:2rem;max-width:700px}
+.meta-item{flex:1;padding:1rem 1.5rem;border-right:1px solid var(--border);background:rgba(10,16,28,.8)}
+.meta-item:last-child{border-right:none}
+.meta-key{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
+.meta-val{font-size:.88rem;font-weight:600;color:var(--text)}
+.content-area{max-width:900px;margin:0 auto;padding:5rem;position:relative;z-index:1}
+.content-area>*+*{margin-top:3rem}
+.section-block h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.04em;color:var(--text);margin-bottom:1.2rem;display:flex;align-items:center;gap:.8rem}
+.section-block h2::before{content:'';width:3px;height:1.5rem;background:var(--accent);border-radius:2px;flex-shrink:0}
+.section-block p{color:var(--muted);line-height:1.9;font-size:1rem;font-weight:300;margin-bottom:1rem}
+.section-block p strong{color:var(--text);font-weight:500}
+.highlights-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem}
+.hl-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.2rem;text-align:center}
+.hl-icon{font-size:1.8rem;margin-bottom:.6rem;display:block}
+.hl-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--accent);line-height:1;display:block}
+.hl-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.3rem}
+.img-block{border-radius:8px;overflow:hidden;border:1px solid var(--border);position:relative}
+.img-block img{width:100%;display:block;object-fit:cover;max-height:420px;filter:saturate(1.2)}
+.img-caption{padding:.8rem 1.2rem;background:var(--surface2);font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);border-top:1px solid var(--border);letter-spacing:.05em}
+.tech-stack{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.tech-tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--accent);border:1px solid var(--border);padding:.3rem .8rem;border-radius:2px;background:rgba(57,232,176,.04);letter-spacing:.06em}
+.workflow-steps{display:flex;flex-direction:column;gap:.8rem;margin-top:1.2rem}
+.w-step{display:flex;align-items:flex-start;gap:1.2rem;padding:1.2rem 1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:4px}
+.w-step-num{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--accent);line-height:1;flex-shrink:0;width:2rem;text-align:center}
+.w-step-content h4{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.w-step-content p{font-size:.82rem;color:var(--muted);line-height:1.6;margin:0;font-weight:300}
+.two-img{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.back-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2rem;border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:.85rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:2px;transition:all .3s;font-family:'DM Sans',sans-serif}
+.back-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(57,232,176,.05)}
+@media(max-width:768px){nav{padding:1rem 1.5rem}.project-hero{padding:8rem 1.5rem 3rem}.content-area{padding:3rem 1.5rem}.highlights-grid{grid-template-columns:1fr 1fr}.two-img{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-back">← Back to Portfolio</a>
+  <div class="nav-title">PROJECT 02 / 05</div>
+</nav>
+
+<div class="project-hero">
+  <div class="project-hero-img">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Assam_Flood_2012.jpg/1280px-Assam_Flood_2012.jpg"
+         alt="Assam Floods"
+         onerror="this.src='https://images.unsplash.com/photo-1547683905-f686c993aae5?w=1200&q=70'">
+  </div>
+  <div class="project-hero-overlay"></div>
+  <div class="project-hero-content">
+    <div>
+      <span class="proj-tag-hero">Remote Sensing</span>
+      <span class="proj-tag-hero">Machine Learning</span>
+      <span class="proj-tag-hero">Flood Mapping</span>
+    </div>
+    <h1 class="project-title">Flood Susceptibility Mapping — Lakhimpur, Assam</h1>
+    <p class="project-subtitle">Integrating multi-source geospatial data and supervised machine learning to generate high-resolution flood risk maps for one of India's most flood-vulnerable districts.</p>
+    <div class="project-meta-strip">
+      <div class="meta-item"><div class="meta-key">Study Area</div><div class="meta-val">Lakhimpur, Assam</div></div>
+      <div class="meta-item"><div class="meta-key">Data Source</div><div class="meta-val">Sentinel-2, SRTM</div></div>
+      <div class="meta-item"><div class="meta-key">Algorithm</div><div class="meta-val">Random Forest</div></div>
+      <div class="meta-item"><div class="meta-key">Platform</div><div class="meta-val">Google Earth Engine</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="content-area">
+
+  <div class="section-block">
+    <h2>Project Overview</h2>
+    <p>Lakhimpur district in Assam is one of the most flood-prone regions of India, experiencing devastating inundation every monsoon season. This project develops a <strong>data-driven flood susceptibility model</strong> by integrating multi-source remote sensing data with supervised machine learning algorithms to generate spatially explicit risk maps.</p>
+    <p>The methodology combines <strong>topographic, hydrological, and vegetation indices</strong> derived from Sentinel-2 and SRTM data with historical flood inventory data to train and validate classification models in Google Earth Engine (GEE).</p>
+  </div>
+
+  <div class="highlights-grid">
+    <div class="hl-card"><span class="hl-icon">🛰️</span><span class="hl-val">10m</span><span class="hl-label">Spatial Resolution</span></div>
+    <div class="hl-card"><span class="hl-icon">📊</span><span class="hl-val">8+</span><span class="hl-label">Input Variables</span></div>
+    <div class="hl-card"><span class="hl-icon">🎯</span><span class="hl-val">RF</span><span class="hl-label">Algorithm Used</span></div>
+    <div class="hl-card"><span class="hl-icon">🗺️</span><span class="hl-val">5</span><span class="hl-label">Risk Classes</span></div>
+  </div>
+
+  <div class="img-block">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Assam_floods_satellite_view.jpg/1280px-Assam_floods_satellite_view.jpg"
+         alt="Assam floods satellite"
+         onerror="this.src='https://images.unsplash.com/photo-1602088113235-229c19758e9f?w=900&q=70'">
+    <div class="img-caption">// FIGURE 1 — Satellite view of flood inundation in Assam; multi-temporal analysis enables change detection</div>
+  </div>
+
+  <div class="section-block">
+    <h2>Conditioning Factors & Data Sources</h2>
+    <p>Flood susceptibility is governed by a complex interplay of <strong>topographic, hydrologic, soil, and land cover variables</strong>. The following conditioning factors were extracted and processed in GEE:</p>
+  </div>
+
+  <div class="workflow-steps">
+    <div class="w-step"><div class="w-step-num">1</div><div class="w-step-content"><h4>Topographic Factors</h4><p>Elevation (SRTM 30m DEM), slope, aspect, curvature, and Topographic Wetness Index (TWI) derived to characterize terrain susceptibility to water accumulation.</p></div></div>
+    <div class="w-step"><div class="w-step-num">2</div><div class="w-step-content"><h4>Hydrological Factors</h4><p>Distance to river networks, drainage density, stream power index (SPI), and rainfall intensity patterns extracted from CHIRPS precipitation datasets.</p></div></div>
+    <div class="w-step"><div class="w-step-num">3</div><div class="w-step-content"><h4>Vegetation & Land Use</h4><p>NDVI, NDWI, and LULC classification from Sentinel-2 multispectral imagery to assess land cover influence on flood runoff and infiltration capacity.</p></div></div>
+    <div class="w-step"><div class="w-step-num">4</div><div class="w-step-content"><h4>ML Model Training & Validation</h4><p>Random Forest classifier trained on 70% of flood inventory points; validated on remaining 30% using AUC-ROC, accuracy, precision, and recall metrics.</p></div></div>
+    <div class="w-step"><div class="w-step-num">5</div><div class="w-step-content"><h4>Susceptibility Map Generation</h4><p>Output probability raster reclassified into five susceptibility zones (Very Low → Very High) and exported for spatial analysis in QGIS/ArcGIS.</p></div></div>
+  </div>
+
+  <div class="two-img">
+    <div class="img-block">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/NDVI_vegetation_index.jpg/640px-NDVI_vegetation_index.jpg"
+           alt="NDVI"
+           onerror="this.src='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500&q=70'">
+      <div class="img-caption">// NDVI derived from Sentinel-2</div>
+    </div>
+    <div class="img-block">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/DEM_elevation_map.jpg/640px-DEM_elevation_map.jpg"
+           alt="DEM"
+           onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&q=70'">
+      <div class="img-caption">// SRTM DEM — elevation & slope analysis</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2>Tools & Technologies</h2>
+    <div class="tech-stack">
+      <span class="tech-tag">Google Earth Engine</span><span class="tech-tag">Python</span><span class="tech-tag">Sentinel-2</span>
+      <span class="tech-tag">SRTM DEM</span><span class="tech-tag">CHIRPS Rainfall</span><span class="tech-tag">Random Forest</span>
+      <span class="tech-tag">NDVI / NDWI</span><span class="tech-tag">TWI / SPI</span><span class="tech-tag">QGIS</span>
+      <span class="tech-tag">ArcGIS Pro</span><span class="tech-tag">GeoPandas</span><span class="tech-tag">Rasterio</span>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2>Key Outcomes</h2>
+    <p>The final susceptibility map delineates <strong>high and very high risk zones</strong> concentrated along major river channels and low-lying floodplains of Lakhimpur. The model outputs serve as decision-support tools for <strong>district disaster management authorities</strong>, urban planners, and insurance frameworks. The methodology is transferable to other flood-prone districts across Northeast India.</p>
+  </div>
+
+  <a href="index.html#projects" class="back-btn">← Back to All Projects</a>
+</div>
+</body>
+</html>
